@@ -1,6 +1,5 @@
 <template>
   <form class="ui large form warning">
-    <h3 class="ui dividing header">Transfer</h3>
     <div v-if="err" class="ui warning message">
       <div class="header">Error.</div>
       <pre>{{err}}</pre>

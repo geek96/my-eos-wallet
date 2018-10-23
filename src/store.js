@@ -68,6 +68,7 @@ export default new Vuex.Store({
     },
     fetchAccountInfo ({commit, dispatch}, account) {
       commit('setAccountInfo', null)
+      commit('setAccountTokens', null)
       eosutil.getAccount(account).then(res => {
         commit('setAccountInfo', res)
         dispatch('fetchCurrencyBalance', {

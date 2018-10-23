@@ -2,7 +2,6 @@
   <div class="ui grid">
     <div class="sixteen wide column">
       <div class="ui large form">
-        <h3 class="ui dividing header">View account balance</h3>
         <div class="field">
          <input placeholder="eos account name" type="text" v-model="q">
         </div>
@@ -96,8 +95,14 @@ export default {
   computed: {
     ...mapGetters({
       'info': 'getAccountInfo',
-      'tokens': 'getTokens'
+      'tokens': 'getTokens',
+      'accountName': 'getAccountName',
     })
+  },
+  watch: {
+    accountName(newVal) {
+      this.q = newVal
+    }
   },
   methods: {
     findAccount() {

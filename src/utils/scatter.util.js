@@ -16,6 +16,12 @@ export default class ScatterUtil {
     return store.getters.getScatter
   }
 
+  getEOS () {
+    return this.getScatter().eos(network, eosjs, {
+      chainId: network.chainId
+    })
+  }
+
   async detectScatter () {
     try {
       const connected = await ScatterJS.scatter.connect("MyEosWallet")
@@ -79,12 +85,24 @@ export default class ScatterUtil {
     }
   }
 
+  async callAction(opts) {
+    return new Promise(async (resolve, reject) => {
+      const eos = this.getEOS()
+      try {
+        const contract = await eos.contract(opts.contract)
+        const qty =  `${parseFloat(opts.qty).toFixed(4)} ${opts.symbol}`
+        const tx = await contract.issue({to: opts.to, quantity: qty, memo: opts.memo})
+        resolve(tx)
+      } catch(err) {
+        reject(err)
+      }
+    })
+  }
+
   async transfer(opts) {
     return new Promise(async (resolve, reject) => {
       try {
-        const eos = this.getScatter().eos(network, eosjs, {
-          chainId: network.chainId
-        })
+        const eos = this.getEOS()
         const acccount = store.getters.getAccount
 
         const actions = [
@@ -107,7 +125,6 @@ export default class ScatterUtil {
         eos.transaction({actions: actions}).then(r => {
           resolve(r)
         }).catch(r => {
-          console.log(r)
           reject(r)
         })
       } catch(err) {        
